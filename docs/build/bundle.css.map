@@ -1,0 +1,16 @@
+{
+  "version": 3,
+  "file": "bundle.css",
+  "sources": [
+    "../../App.svelte",
+    "../../Bokser.svelte",
+    "../../Boks.svelte"
+  ],
+  "sourcesContent": [
+    "<script>\n\timport Bokser from \"./Bokser.svelte\"\n</script>\n\n<main>\n\t<Bokser />\n</main>\n\n<style>\n\tmain {\n\t\ttext-align: center;\n\t\tpadding: 1em;\n\t\tmax-width: 240px;\n\t\tmargin: 0 auto;\n\t}\n\n\th1 {\n\t\tcolor: #ff3e00;\n\t\ttext-transform: uppercase;\n\t\tfont-size: 4em;\n\t\tfont-weight: 100;\n\t}\n\n\t@media (min-width: 640px) {\n\t\tmain {\n\t\t\tmax-width: none;\n\t\t}\n\t}\n</style>",
+    "<script>\n    import Boks from \"./Boks.svelte\"\n    import {db} from \"./firebase.js\"\n    const dbBokser = db.collection(\"dbBokser\")\n\n\n    let bokser = []\n\n    const addBoks = () => {\n        dbBokser.add({\n            css: \"background-color: orange;\"\n        })    \n    }\n\n    dbBokser.onSnapshot(snap => {\n        bokser = snap.docs\n    })\n\n</script>\n\n<header>\n    <div class=\"add\" on:click={addBoks}>Legg til boks</div>\n</header>\n<section>\n    {#each bokser as boks}\n        <Boks id={boks.id} data={boks.data()} />\n    {:else}\n        <div>Klikk for å lage en boks</div>\n    {/each}\n</section>\n\n<style>\n    section {\n        margin-top: 2rem;        \n        display: grid;\n        gap: 2rem;\n        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));\n        grid-auto-rows: 230px;\n    }\n    .add {\n        background-color: blueviolet;\n        color: white;\n        padding: 1rem;\n        border-radius: 1rem;\n        display: inline-block;\n        font-size: 1.5rem;\n        cursor: pointer;\n    }\n</style>",
+    "<script>\n    import {db} from \"./firebase.js\"\n    const dbBokser = db.collection(\"dbBokser\")\n\n    export let id = \"\"\n    export let data = {}\n\n    const changeCSS = () => {\n        const boks = dbBokser.doc(id)\n        boks.update({\n            css: data.css\n        })\n    }\n\n</script>\n\n<textarea style={data.css} bind:value={data.css} on:input={changeCSS}></textarea>\n\n\n<style>\n\n    textarea {\n        transition: 2s;\n    }\n\n\n    textarea:focus {\n        outline: none;\n    }\n\n</style>"
+  ],
+  "names": [],
+  "mappings": "AASC,IAAI,eAAC,CAAC,AACL,UAAU,CAAE,MAAM,CAClB,OAAO,CAAE,GAAG,CACZ,SAAS,CAAE,KAAK,CAChB,MAAM,CAAE,CAAC,CAAC,IAAI,AACf,CAAC,AASD,MAAM,AAAC,YAAY,KAAK,CAAC,AAAC,CAAC,AAC1B,IAAI,eAAC,CAAC,AACL,SAAS,CAAE,IAAI,AAChB,CAAC,AACF,CAAC;ACKE,OAAO,eAAC,CAAC,AACL,UAAU,CAAE,IAAI,CAChB,OAAO,CAAE,IAAI,CACb,GAAG,CAAE,IAAI,CACT,qBAAqB,CAAE,OAAO,SAAS,CAAC,CAAC,OAAO,KAAK,CAAC,CAAC,GAAG,CAAC,CAAC,CAC5D,cAAc,CAAE,KAAK,AACzB,CAAC,AACD,IAAI,eAAC,CAAC,AACF,gBAAgB,CAAE,UAAU,CAC5B,KAAK,CAAE,KAAK,CACZ,OAAO,CAAE,IAAI,CACb,aAAa,CAAE,IAAI,CACnB,OAAO,CAAE,YAAY,CACrB,SAAS,CAAE,MAAM,CACjB,MAAM,CAAE,OAAO,AACnB,CAAC;AC1BD,QAAQ,eAAC,CAAC,AACN,UAAU,CAAE,EAAE,AAClB,CAAC,AAGD,uBAAQ,MAAM,AAAC,CAAC,AACZ,OAAO,CAAE,IAAI,AACjB,CAAC"
+}
